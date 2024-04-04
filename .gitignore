@@ -39,3 +39,4 @@ out/
 !.vscode/launch.json
 
 src/main/resources/static
+/.devcontainer/postgres/

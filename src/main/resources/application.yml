@@ -1,6 +1,6 @@
 ---
 spring:
-  application.name: sample-boot-hibernate
+  application.name: sample-boot-jpa
   messages.basename: messages-validation, messages
   banner.location: banner.txt
   cache.jcache.config: classpath:ehcache.xml
@@ -12,12 +12,16 @@ spring:
   jpa.open-in-view: false
   security:
     user.password: unused
+  threads:
+    virtual:
+      enabled: true
 
 logging.config: ${LOGGING_CONFIG_XML:classpath:logback-spring-production.xml}
 
 server:
   port: ${SERVER_PORT:8080}
   servlet.session.timeout: ${SERVER_SESSION_TIMEOUT:60m}
+  shutdown: graceful
 
 management:
   endpoints.web:
@@ -27,19 +31,18 @@ management:
 sample:
   datasource:
     app:
-      url: ${APP_JDBC_URL:jdbc:postgresql://db:5432/postgres}
-      username: ${APP_JDBC_USERNAME:postgres}
-      password: ${APP_JDBC_PASSWORD:postgres}
+      url: ${APP_JDBC_URL:jdbc:postgresql://localhost:5432/postgres}
+      username: ${POSTGRES_USER:postgres}
+      password: ${POSTGRES_PASSWORD:postgres}
       jpa:
         package-to-scan: sample.model
     system:
-      url: ${SYSTEM_JDBC_URL:jdbc:postgresql://db:5432/postgres}
-      username: ${SYSTEM_JDBC_USERNAME:postgres}
-      password: ${SYSTEM_JDBC_PASSWORD:postgres}
+      url: ${SYSTEM_JDBC_URL:jdbc:postgresql://localhost:5432/postgres}
+      username: ${POSTGRES_USER:postgres}
+      password: ${POSTGRES_PASSWORD:postgres}
       jpa:
         package-to-scan: sample.context
   mail.enabled: true
-
 ---
 spring.config.activate:
   on-profile: developer
@@ -53,7 +56,3 @@ springdoc.swagger-ui.enabled: true
 sample:
   cors: true
   mail.enabled: false
-logging:
-  level:
-    web: warn
-    root: info

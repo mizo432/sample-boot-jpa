@@ -1,11 +1,8 @@
 version: '3.8'
 
-volumes:
-  postgres-data:
-
 services:
   app:
-    container_name: javadev
+    container_name: ${PROJECT_NAME:-default}-javadev
     build:
       context: .
       dockerfile: Dockerfile
@@ -16,7 +13,7 @@ services:
         POSTGRES_DB: postgres
         POSTGRES_HOSTNAME: postgresdb
     volumes:
-      - ../..:/workspaces:cached
+      - ../:/workspaces:cached
 
     # Overrides default command so things don't shut down after the process ends.
     command: sleep infinity
@@ -28,16 +25,18 @@ services:
     # (Adding the "ports" property to this file will not forward from a Codespace.)
 
   db:
-    container_name: postgresdb
+    container_name: ${PROJECT_NAME:-default}-postgresdb
     image: postgres:16
     restart: unless-stopped
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - ./postgres/data:/var/lib/postgresql/data
     environment:
       # NOTE: POSTGRES_DB/USER/PASSWORD should match values in app container
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
+    ports:
+      - 5432:5432
 
     # Add "forwardPorts": ["5432"] to **devcontainer.json** to forward PostgreSQL locally.
     # (Adding the "ports" property to this file will not forward from a Codespace.)

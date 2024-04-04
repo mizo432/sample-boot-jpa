@@ -53,3 +53,7 @@ springdoc.swagger-ui.enabled: true
 sample:
   cors: true
   mail.enabled: false
+logging:
+  level:
+    web: warn
+    root: info
